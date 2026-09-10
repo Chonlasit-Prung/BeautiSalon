@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: salon-api
+    runtime: docker
+    rootDir: salon-api
+    dockerfilePath: ./Dockerfile
+    plan: free
+    healthCheckPath: /api/v1/services
+    autoDeploy: true
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      # เปลี่ยนเป็น PIN ที่ต้องการ (ค่าเดียวกับ appsettings.json)
+      - key: OwnerAuth__Pin
+        value: "2499"
+      # !!! เปลี่ยนเป็น connection string ของ Supabase จริง !!!
+      # รูปแบบ: Host=db.<ref>.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=<password>;SSL Mode=Require;Trust Server Certificate=true
+      - key: ConnectionStrings__DefaultConnection
+        value: Host=db.YOUR-PROJECT-REF.supabase.co;Port=5432;Database=postgres;Username=postgres;Password=CHANGE-ME;SSL Mode=Require;Trust Server Certificate=true
+      # !!! เปลี่ยนเป็นโดเมน Vercel จริง !!!
+      - key: Cors__AllowedOrigins__0
+        value: http://localhost:4200
+      - key: Cors__AllowedOrigins__1
+        value: https://YOUR-PROJECT.vercel.app

@@ -1,0 +1,127 @@
+<div class="salon-menu">
+  <!-- Header Section -->
+  <header class="header">
+    <div class="header__brand">
+      <h1 class="header__logo">Beauty Salon</h1>
+      <p class="header__slogan">HAIR &amp; NAIL SALON</p>
+    </div>
+    <button class="header__menu-btn" (click)="toggleMenu()">
+      <span class="header__menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </span>
+    </button>
+  </header>
+
+  <!-- Dropdown Menu Overlay -->
+  @if (isMenuOpen()) {
+    <div class="dropdown-overlay" (click)="closeMenu()"></div>
+    <nav class="dropdown-menu">
+      @for (item of visibleMenuItems; track item.label) {
+        <button type="button" class="dropdown-menu__item" [class.dropdown-menu__item--active]="$first" (click)="navigateTo(item.route)">
+          <svg class="dropdown-menu__icon" viewBox="0 0 24 24" fill="currentColor">
+            <path [attr.d]="item.icon"/>
+          </svg>
+          <span>{{ item.label }}</span>
+        </button>
+      }
+    </nav>
+  }
+
+  <!-- Hero Banner Section -->
+  <section class="hero">
+    <div class="hero__image">
+      <div class="hero__overlay"></div>
+    </div>
+    <div class="hero__content">
+      <h2 class="hero__title">ยินดีต้อนรับสู่<br>เสริมสวย ไชย์</h2>
+      <p class="hero__subtitle">เลือกสรรความงามที่ต้องการ...</p>
+      <!-- <p class="hero__description">จองคิวออนไลน์ง่ายๆ เพื่อสัมผัสการบริการระดับพรีเมียม</p> -->
+    </div>
+  </section>
+
+  <!-- Service List Section -->
+  <section class="services">
+    <div class="services__header">
+      <h3 class="services__title">เมนูบริการของเรา (Services)</h3>
+      <button
+        class="services__view-all"
+        [disabled]="isSaving()"
+        (click)="saveMenuAsImage()"
+      >
+        {{ isSaving() ? 'กำลังสร้างภาพ...' : 'บันทึกเมนูบริการ' }}
+      </button>
+    </div>
+
+    @if (saveError(); as error) {
+      <p class="services__save-error">{{ error }}</p>
+    }
+
+    <div class="services__list">
+      @if (isLoading()) {
+        <div class="services__status">กำลังโหลดบริการ...</div>
+      } @else if (loadError()) {
+        <div class="services__status services__status--error">{{ loadError() }}</div>
+      } @else {
+        @for (service of services(); track service.id; let i = $index) {
+          <div class="service-card">
+            <div class="service-card__content">
+              <div class="service-card__image">
+                @if (service.imageUrl && !imageFailed(service.id)) {
+                  <img
+                    class="service-card__img"
+                    [src]="service.imageUrl"
+                    [alt]="service.nameTh"
+                    (error)="markImageFailed(service.id)"
+                  />
+                } @else {
+                  <span class="service-card__icon">{{ emojiFor(i) }}</span>
+                }
+              </div>
+              <div class="service-card__info">
+                <h4 class="service-card__name">
+                  {{ service.nameTh }} <span class="service-card__name-en">({{ service.nameEn }})</span>
+                </h4>
+                <p class="service-card__description">{{ service.description }}</p>
+                <div class="service-card__duration">
+                  <svg class="service-card__clock-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  <span>{{ service.durationMinutes }} นาที</span>
+                </div>
+              </div>
+            </div>
+            <div class="service-card__price">{{ priceLabel(service) }}฿</div>
+          </div>
+        }
+      }
+    </div>
+  </section>
+
+  <!-- Hidden A4 Menu Poster (captured to image) -->
+  <div class="menu-poster" #menuPoster>
+    <div class="menu-poster__header">
+      <h2 class="menu-poster__title">เมนูบริการ</h2>
+      <p class="menu-poster__shop">เสริมสวย ไชย์ · HAIR &amp; NAIL SALON</p>
+    </div>
+
+    <div class="menu-poster__items">
+      @for (service of services(); track service.id) {
+        <div class="menu-poster__row">
+          <span class="menu-poster__name">{{ service.nameTh }} ({{ service.nameEn }})</span>
+          <span class="menu-poster__dots"></span>
+          <span class="menu-poster__price">{{ priceLabel(service) }}฿</span>
+        </div>
+      }
+    </div>
+
+    <p class="menu-poster__footer">เวลาทำการ 09:00 – 20:00 น. · โทร 096-812-5571</p>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer__home-indicator"></div>
+  </footer>
+</div>

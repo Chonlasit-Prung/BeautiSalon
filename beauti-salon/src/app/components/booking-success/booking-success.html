@@ -1,0 +1,116 @@
+<div class="success-page">
+  <!-- Header -->
+  <header class="header">
+    <button class="header__back" (click)="goHome()" aria-label="ย้อนกลับ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <h1 class="header__title">สถานะการจอง</h1>
+    <div class="header__spacer"></div>
+  </header>
+
+  <!-- Status Content -->
+  <div class="success">
+    @if (status() === 'Pending') {
+      <div class="success__icon success__icon--waiting">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2">
+          <path d="M6 2h12M6 22h12M6 2v3l6 5-6 5v5M18 2v3l-6 5 6 5v5" />
+        </svg>
+      </div>
+      <h2 class="success__title">รออนุมัติการจองคิว</h2>
+      <p class="success__message">คำขอจองของคุณถูกส่งแล้ว<br>กรุณารอเจ้าของร้านอนุมัติการจองคิว</p>
+      <p class="status-hint">กำลังตรวจสอบสถานะโดยอัตโนมัติ...</p>
+    } @else if (status() === 'Confirmed') {
+      <div class="success__icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5">
+          <polyline points="20 6 9 17 4 12" />
+        </svg>
+      </div>
+      <h2 class="success__title">จองคิวสำเร็จ!</h2>
+      <p class="success__message">การจองของคุณได้รับการอนุมัติแล้ว<br>ขอบคุณที่ใช้บริการ</p>
+    } @else if (status() === 'Cancelled') {
+      <div class="success__icon success__icon--cancelled">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.5">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </div>
+      <h2 class="success__title">การจองถูกยกเลิก</h2>
+      <p class="success__message">ขออภัย คำขอจองของคุณถูกยกเลิก<br>กรุณาติดต่อร้านเพื่อจองใหม่</p>
+    }
+
+    <!-- Booking Summary Card -->
+    <div class="summary">
+      <div class="summary__row">
+        <span class="summary__icon">🎨</span>
+        <div class="summary__info">
+          <span class="summary__label">บริการ</span>
+          <span class="summary__value">{{ booking().service?.nameTh ?? 'ตัดผม' }} ({{ booking().service?.nameEn ?? 'Haircut' }})</span>
+        </div>
+      </div>
+
+      @if (booking().bookingCode; as code) {
+        <div class="summary__divider"></div>
+
+        <div class="summary__row">
+          <span class="summary__icon">🎫</span>
+          <div class="summary__info">
+            <span class="summary__label">รหัสการจอง</span>
+            <span class="summary__value">{{ code }}</span>
+          </div>
+        </div>
+      }
+
+      <div class="summary__divider"></div>
+
+      <div class="summary__row">
+        <span class="summary__icon">📅</span>
+        <div class="summary__info">
+          <span class="summary__label">วันที่</span>
+          <span class="summary__value">{{ booking().dateLabel ?? 'วันนี้' }}</span>
+        </div>
+      </div>
+
+      <div class="summary__divider"></div>
+
+      <div class="summary__row">
+        <span class="summary__icon">⏰</span>
+        <div class="summary__info">
+          <span class="summary__label">เวลา</span>
+          <span class="summary__value">{{ booking().time ?? '09:00' }} น.</span>
+        </div>
+      </div>
+
+      <div class="summary__divider"></div>
+
+      <div class="summary__row">
+        <span class="summary__icon">👤</span>
+        <div class="summary__info">
+          <span class="summary__label">ชื่อ</span>
+          <span class="summary__value">{{ booking().name ?? 'ชลดา ประเสริฐดี' }}</span>
+        </div>
+      </div>
+
+      <div class="summary__divider"></div>
+
+      <div class="summary__row">
+        <span class="summary__icon">📞</span>
+        <div class="summary__info">
+          <span class="summary__label">เบอร์โทร</span>
+          <span class="summary__value">{{ booking().phone ?? '089-123-4567' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Home Button -->
+    <button class="home-btn" (click)="goHome()">
+      กลับหน้าหลัก
+    </button>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer__home-indicator"></div>
+  </footer>
+</div>

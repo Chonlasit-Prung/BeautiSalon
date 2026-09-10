@@ -1,0 +1,200 @@
+<div class="owner-page">
+  <!-- Header -->
+  <header class="owner-header">
+    <button class="owner-header__back" (click)="goBack()" aria-label="ย้อนกลับ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <h1 class="owner-header__title">จัดการการจอง</h1>
+    @if (isAuthenticated()) {
+      <div class="owner-header__right">
+        <div class="notification-bell" aria-label="การจองที่รออนุมัติ">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+            <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+          </svg>
+          @if (pendingCount() > 0) {
+            <span class="notification-bell__badge">{{ pendingCount() }}</span>
+          }
+        </div>
+        <button class="owner-header__logout" (click)="logout()">ออกจากระบบ</button>
+      </div>
+    } @else {
+      <div class="owner-header__spacer"></div>
+    }
+  </header>
+
+  <!-- Owner Login (PIN) -->
+  @if (!isAuthenticated()) {
+    <div class="login">
+      <div class="login__icon">🔐</div>
+      <h2 class="login__title">สำหรับเจ้าของร้าน</h2>
+      <p class="login__hint">กรอกรหัสเจ้าของร้านเพื่อเข้าถึงข้อมูลการจอง</p>
+      <input
+        class="login__input"
+        type="password"
+        inputmode="numeric"
+        maxlength="10"
+        placeholder="รหัสเจ้าของร้าน"
+        [value]="pin()"
+        (input)="pin.set($any($event.target).value)"
+        (keydown.enter)="login()"
+      />
+      @if (loginError(); as error) {
+        <p class="login__error">{{ error }}</p>
+      }
+      <button class="login__btn" [disabled]="isLoggingIn()" (click)="login()">
+        {{ isLoggingIn() ? 'กำลังตรวจสอบ...' : 'เข้าสู่ระบบ' }}
+      </button>
+    </div>
+  } @else {
+    <!-- Filters -->
+    <section class="filters">
+      <input
+        class="filters__search"
+        type="search"
+        placeholder="ค้นหา: ชื่อ / เบอร์โทร / บริการ"
+        [value]="searchText()"
+        (input)="searchText.set($any($event.target).value)"
+        (keydown.enter)="applyFilters()"
+      />
+      <input
+        class="filters__date"
+        type="date"
+        [value]="filterDate()"
+        (change)="filterDate.set($any($event.target).value)"
+      />
+      <select
+        class="filters__status"
+        [value]="filterStatus()"
+        (change)="filterStatus.set($any($event.target).value)"
+      >
+        <option value="">ทุกสถานะ</option>
+        <option value="Pending">รอการยืนยัน</option>
+        <option value="Confirmed">ยืนยันแล้ว</option>
+        <option value="Completed">เสร็จสิ้น</option>
+        <option value="Cancelled">ยกเลิก</option>
+      </select>
+      <div class="filters__actions">
+        <button class="filters__btn" (click)="applyFilters()">ค้นหา</button>
+        <button class="filters__btn filters__btn--ghost" (click)="clearFilters()">ล้าง</button>
+      </div>
+    </section>
+
+    @if (actionError(); as error) {
+      <p class="action-error">{{ error }}</p>
+    }
+
+    @if (pendingCount() > 0) {
+      <div class="pending-notice">
+        <span class="pending-notice__dot"></span>
+        มีการจองที่รออนุมัติ {{ pendingCount() }} รายการ
+      </div>
+    }
+
+    @if (isLoading()) {
+      <p class="status-text">กำลังโหลดรายการจอง...</p>
+    } @else if (loadError(); as error) {
+      <p class="status-text status-text--error">{{ error }}</p>
+    } @else if (bookings().length === 0) {
+      <p class="status-text">ไม่พบรายการจอง</p>
+    } @else {
+      <!-- Booking List -->
+      <div class="booking-list">
+        @for (booking of bookings(); track booking.id) {
+          <div class="booking-card">
+            <div class="booking-card__top">
+              <span class="booking-card__code">{{ booking.bookingCode }}</span>
+              <span class="booking-card__status booking-card__status--{{ booking.status.toLowerCase() }}">
+                {{ statusLabels(booking.status) }}
+              </span>
+            </div>
+            <div class="booking-card__row">
+              <span class="booking-card__label">ลูกค้า</span>
+              <span class="booking-card__value">{{ booking.customerName }} · {{ booking.customerPhoneNumber }}</span>
+            </div>
+            <div class="booking-card__row">
+              <span class="booking-card__label">บริการ</span>
+              <span class="booking-card__value">{{ booking.serviceName }}</span>
+            </div>
+            <div class="booking-card__row">
+              <span class="booking-card__label">เวลา</span>
+              <span class="booking-card__value">
+                {{ formatDate(booking.bookingDate) }} · {{ formatTime(booking.startTime) }}–{{ formatTime(booking.endTime) }} น.
+              </span>
+            </div>
+            <div class="booking-card__row">
+              <span class="booking-card__label">ราคาเมนู</span>
+              <span class="booking-card__value">{{ priceReferenceLabel(booking) }}</span>
+            </div>
+            <div class="booking-card__price-row">
+              <span class="booking-card__label">ราคาที่เก็บจริง</span>
+              @if (booking.price !== null && !isEditingPrice(booking.id)) {
+                <span class="booking-card__value">{{ savedPriceLabel(booking) }}</span>
+                <button
+                  class="booking-card__btn booking-card__btn--edit"
+                  [disabled]="isUpdatingId() !== null || priceSavingId() !== null"
+                  (click)="editPrice(booking)"
+                >
+                  แก้ไขราคา
+                </button>
+              } @else {
+                <div class="booking-card__price-input-wrap">
+                  <input
+                    class="booking-card__price-input"
+                    type="number"
+                    min="0"
+                    step="0.01"
+                    inputmode="decimal"
+                    placeholder="—"
+                    [value]="priceInputValue(booking)"
+                    (input)="setPriceDraft(booking.id, $any($event.target).value)"
+                  />
+                  <span class="booking-card__price-unit">฿</span>
+                </div>
+                <button
+                  class="booking-card__btn booking-card__btn--save"
+                  [disabled]="isUpdatingId() !== null || priceSavingId() !== null"
+                  (click)="savePrice(booking)"
+                >
+                  {{ priceSavingId() === booking.id ? 'กำลังบันทึก...' : 'บันทึกราคา' }}
+                </button>
+              }
+            </div>
+
+            @if (booking.status !== 'Completed' && booking.status !== 'Cancelled') {
+              <div class="booking-card__actions">
+                @if (booking.status === 'Pending') {
+                  <button
+                    class="booking-card__btn booking-card__btn--confirm"
+                    [disabled]="isUpdatingId() !== null"
+                    (click)="changeStatus(booking, 'Confirmed')"
+                  >
+                    ยืนยัน
+                  </button>
+                }
+                @if (booking.status === 'Confirmed') {
+                  <button
+                    class="booking-card__btn booking-card__btn--complete"
+                    [disabled]="isUpdatingId() !== null"
+                    (click)="changeStatus(booking, 'Completed')"
+                  >
+                    เสร็จสิ้น
+                  </button>
+                }
+                <button
+                  class="booking-card__btn booking-card__btn--cancel"
+                  [disabled]="isUpdatingId() !== null"
+                  (click)="changeStatus(booking, 'Cancelled')"
+                >
+                  ยกเลิก
+                </button>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

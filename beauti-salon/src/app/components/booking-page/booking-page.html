@@ -1,0 +1,179 @@
+<div class="booking-page">
+  <!-- Header -->
+  <header class="header">
+    <button class="header__back" (click)="goBack()" aria-label="ย้อนกลับ">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="15 18 9 12 15 6" />
+      </svg>
+    </button>
+    <h1 class="header__title">จองคิวออนไลน์</h1>
+    <div class="header__spacer"></div>
+  </header>
+
+  <!-- Section 1 - เลือกบริการ -->
+  <section class="section">
+    <h2 class="section__title">1. เลือกบริการ (Service)</h2>
+    <div class="service-dropdown" [class.service-dropdown--disabled]="!selectedService()" (click)="toggleServiceMenu()">
+      @if (selectedService(); as service) {
+        <span class="service-dropdown__icon">
+          @if (service.imageUrl && !imageFailed(service.id)) {
+            <img
+              class="service-dropdown__img"
+              [src]="service.imageUrl"
+              [alt]="service.nameTh"
+              (error)="markImageFailed(service.id)"
+            />
+          } @else {
+            {{ emojiForService(service) }}
+          }
+        </span>
+        <span class="service-dropdown__label">
+          {{ service.nameTh }} ({{ service.nameEn }}) - {{ priceLabel(service) }}฿
+        </span>
+      } @else {
+        <span class="service-dropdown__label">
+          {{ isLoading() ? 'กำลังโหลด...' : (loadError() ?? 'ไม่มีบริการให้เลือก') }}
+        </span>
+      }
+      <svg class="service-dropdown__arrow" [class.service-dropdown__arrow--open]="isServiceOpen()" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+        <polyline points="6 9 12 15 18 9" />
+      </svg>
+    </div>
+
+    @if (isServiceOpen()) {
+      <div class="service-options">
+        @for (service of services(); track service.id; let i = $index) {
+          <button
+            class="service-option"
+            [class.service-option--selected]="service.id === selectedService()?.id"
+            (click)="selectService(service)"
+          >
+            @if (service.imageUrl && !imageFailed(service.id)) {
+              <span class="service-option__img-wrap">
+                <img
+                  class="service-option__img"
+                  [src]="service.imageUrl"
+                  [alt]="service.nameTh"
+                  (error)="markImageFailed(service.id)"
+                />
+              </span>
+            } @else {
+              <span class="service-option__icon">{{ emojiFor(i) }}</span>
+            }
+            <span class="service-option__label">{{ service.nameTh }} ({{ service.nameEn }})</span>
+            <span class="service-option__price">{{ priceLabel(service) }}฿</span>
+          </button>
+        }
+      </div>
+    }
+  </section>
+
+  <!-- Section 2 - เลือกวันที่ -->
+  <section class="section">
+    <div class="section__header">
+      <h2 class="section__title">2. เลือกวันที่ (Select Date)</h2>
+      <div class="date-nav">
+        <button
+          type="button"
+          class="date-nav__btn"
+          [disabled]="isPrevDisabled()"
+          (click)="prevMonth()"
+          aria-label="เดือนก่อนหน้า"
+        >
+          ‹
+        </button>
+        <span class="section__month">{{ monthLabel() }}</span>
+        <button
+          type="button"
+          class="date-nav__btn"
+          [disabled]="isNextDisabled()"
+          (click)="nextMonth()"
+          aria-label="เดือนถัดไป"
+        >
+          ›
+        </button>
+      </div>
+    </div>
+
+    <div class="date-scroll">
+      @for (day of days(); track day.num) {
+        <button
+          type="button"
+          class="date-box"
+          [class.date-box--selected]="isDateSelected(day.date)"
+          [class.date-box--disabled]="day.isPast"
+          [disabled]="day.isPast"
+          (click)="selectDate(day.date)"
+        >
+          <span class="date-box__day">{{ day.dayTh }}.</span>
+          <span class="date-box__num">{{ day.num }}</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <!-- Section 3 - เลือกเวลา -->
+  <section class="section">
+    <h2 class="section__title">3. เลือกเวลา (Select Time)</h2>
+
+    <div class="time-grid">
+      @for (time of times(); track time.time) {
+        <button
+          type="button"
+          class="time-btn"
+          [class.time-btn--selected]="!time.unavailable && !time.past && time.time === selectedTime()"
+          [class.time-btn--disabled]="time.unavailable || time.past"
+          [disabled]="time.unavailable || time.past"
+          (click)="selectTime(time)"
+        >
+          {{ time.time }}
+        </button>
+      }
+    </div>
+
+    @if (slotsLoading()) {
+      <p class="time-note">กำลังโหลดช่วงเวลาที่ว่าง...</p>
+    } @else if (slotsError(); as error) {
+      <p class="time-note time-note--error">{{ error }}</p>
+    }
+  </section>
+
+  <!-- Section 4 - ข้อมูลผู้จอง -->
+  <section class="section section--customer">
+    <h2 class="section__title">4. ข้อมูลผู้จอง (Customer Info)</h2>
+
+    <div class="input-group">
+      <label class="input-label" for="customer-name">ชื่อ-นามสกุล (Name)</label>
+      <input
+        id="customer-name"
+        class="input-field"
+        type="text"
+        placeholder="ชลดา ประเสริฐดี"
+        [value]="name()"
+        (input)="name.set($any($event.target).value)"
+      />
+    </div>
+
+    <div class="input-group">
+      <label class="input-label" for="customer-phone">เบอร์โทรศัพท์ (Phone Number)</label>
+      <input
+        id="customer-phone"
+        class="input-field"
+        type="tel"
+        placeholder="089-123-4567"
+        [value]="phone()"
+        (input)="phone.set($any($event.target).value)"
+      />
+    </div>
+  </section>
+
+  <!-- Footer Action -->
+  <footer class="footer">
+    @if (submitError(); as error) {
+      <div class="confirm-error">{{ error }}</div>
+    }
+    <button class="confirm-btn" [disabled]="isSubmitting()" (click)="confirmBooking()">
+      {{ isSubmitting() ? 'กำลังส่งคำขอจอง...' : 'ยืนยันการจอง (Confirm Booking)' }}
+    </button>
+  </footer>
+</div>

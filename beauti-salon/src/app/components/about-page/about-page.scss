@@ -1,0 +1,286 @@
+// Color Variables
+$white: #FFFFFF;
+$cream: #FFF8F0;
+$light-beige: #FAF3EB;
+$golden-brown: #C4956A;
+$dark-brown: #4A3B32;
+$pastel-pink: #F8E0E6;
+$pastel-pink-dark: #F5D0D8;
+$soft-pink: #EDBBC4;
+$gray: #9E9E9E;
+$light-gray: #E5E1DC;
+$shadow: rgba(74, 59, 50, 0.08);
+
+// Font
+$font-th: 'Prompt', 'Sarabun', sans-serif;
+
+.about-page {
+  font-family: $font-th;
+  background-color: #FFFBF6;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+}
+
+// Header
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: clamp(14px, 3vw, 20px) clamp(16px, 4vw, 24px);
+  background-color: $white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid rgba(184, 115, 51, 0.08);
+
+  &__back {
+    width: clamp(38px, 5vw, 44px);
+    height: clamp(38px, 5vw, 44px);
+    border-radius: 12px;
+    background-color: $white;
+    border: 1px solid $light-gray;
+    box-shadow: 0 2px 8px $shadow;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: $dark-brown;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: $cream;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  &__title {
+    font-size: clamp(17px, 2.8vw, 20px);
+    font-weight: 700;
+    color: $dark-brown;
+    margin: 0;
+    text-align: center;
+  }
+
+  &__spacer {
+    width: clamp(38px, 5vw, 44px);
+    flex-shrink: 0;
+  }
+}
+
+// Store Card
+.store-card {
+  margin: clamp(20px, 4vw, 28px) clamp(16px, 4vw, 24px) 0;
+  background: linear-gradient(135deg, $pastel-pink 0%, $pastel-pink-dark 100%);
+  border-radius: 20px;
+  padding: clamp(24px, 5vw, 32px) clamp(20px, 4vw, 28px);
+  text-align: center;
+  box-shadow: 0 8px 24px rgba(248, 224, 230, 0.6);
+
+  &__name {
+    font-size: clamp(24px, 5vw, 32px);
+    font-weight: 700;
+    color: $dark-brown;
+    margin: 0 0 4px;
+  }
+
+  &__slogan {
+    font-size: clamp(12px, 2vw, 14px);
+    color: $golden-brown;
+    letter-spacing: 0.08em;
+    font-weight: 600;
+    margin: 0 0 clamp(12px, 2.5vw, 16px);
+  }
+
+  &__desc {
+    font-size: clamp(13px, 2.2vw, 14px);
+    color: $dark-brown;
+    line-height: 1.7;
+    margin: 0;
+  }
+}
+
+// Sections
+.section {
+  padding: clamp(22px, 4vw, 28px) clamp(16px, 4vw, 24px);
+
+  &__title {
+    font-size: clamp(16px, 2.6vw, 18px);
+    font-weight: 600;
+    color: $dark-brown;
+    margin: 0 0 14px;
+  }
+
+  &__address {
+    font-size: clamp(13px, 2.2vw, 14px);
+    color: $gray;
+    line-height: 1.6;
+    margin: 12px 0 12px;
+  }
+
+  &__link {
+    display: inline-block;
+    color: $golden-brown;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    border: 1px solid rgba(184, 115, 51, 0.35);
+    border-radius: 999px;
+    padding: 8px 16px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(184, 115, 51, 0.08);
+    }
+  }
+}
+
+// Map
+.map-frame {
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid $light-gray;
+  box-shadow: 0 4px 16px $shadow;
+
+  &__iframe {
+    display: block;
+    width: 100%;
+    height: clamp(220px, 45vw, 280px);
+    border: 0;
+  }
+}
+
+// Info Cards
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background-color: $white;
+  border: 1px solid $light-gray;
+  border-radius: 14px;
+  padding: clamp(14px, 2.5vw, 18px);
+  box-shadow: 0 2px 8px $shadow;
+
+  &--link {
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $pastel-pink-dark;
+      box-shadow: 0 4px 16px $shadow;
+    }
+  }
+
+  &__icon {
+    width: clamp(42px, 6vw, 48px);
+    height: clamp(42px, 6vw, 48px);
+    border-radius: 12px;
+    background-color: $cream;
+    color: $golden-brown;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    svg {
+      width: 22px;
+      height: 22px;
+    }
+
+    &--clock {
+      background-color: $light-beige;
+    }
+
+    &--facebook {
+      background-color: #E7EEF9;
+      color: #1877F2;
+    }
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+
+  &__label {
+    font-size: clamp(11px, 2vw, 12px);
+    color: $gray;
+    margin-bottom: 2px;
+  }
+
+  &__value {
+    font-size: clamp(14px, 2.4vw, 15px);
+    font-weight: 600;
+    color: $dark-brown;
+  }
+
+  &__hint {
+    font-size: 12px;
+    color: $gray;
+    margin-top: 2px;
+  }
+}
+
+// Info List (contact)
+.info-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+// Footer
+.footer {
+  padding: clamp(20px, 3vw, 28px);
+  display: flex;
+  justify-content: center;
+
+  &__home-indicator {
+    width: clamp(100px, 14vw, 134px);
+    height: 5px;
+    background-color: $light-gray;
+    border-radius: 3px;
+  }
+}
+
+// Responsive breakpoints (mobile-first)
+
+// Tablet (>= 640px): wider frame
+@media (min-width: 640px) {
+  .about-page {
+    max-width: 820px;
+  }
+}
+
+// Desktop (>= 1024px): bigger layout
+@media (min-width: 1024px) {
+  .about-page {
+    max-width: 900px;
+  }
+}
+
+// Large desktop (>= 1600px): cap width
+@media (min-width: 1600px) {
+  .about-page {
+    max-width: 1000px;
+  }
+}
+
+// Reduce motion preference
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}

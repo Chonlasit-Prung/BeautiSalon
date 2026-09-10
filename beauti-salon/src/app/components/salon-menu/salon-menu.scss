@@ -1,0 +1,601 @@
+// Color Variables
+$white: #FFFFFF;
+$cream: #FFF8F0;
+$beige: #F5E6D3;
+$light-beige: #FAF3EB;
+$golden-brown: #C4956A;
+$dark-brown: #5D4037;
+$pastel-pink: #F8E0E6;
+$pastel-pink-dark: #F5D0D8;
+$copper: #B87333;
+$gray: #9E9E9E;
+$light-gray: #E0E0E0;
+$shadow: rgba(93, 64, 55, 0.1);
+
+// Font
+$font-th: 'Prompt', 'Sarabun', sans-serif;
+
+// Content area (fluid, centers on desktop)
+.salon-menu {
+  font-family: $font-th;
+  background-color: $cream;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+}
+
+// Header
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: clamp(16px, 3vw, 24px) clamp(16px, 4vw, 32px);
+  background-color: $white;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(93, 64, 55, 0.05);
+
+  &__brand {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__logo {
+    font-size: clamp(20px, 3vw, 28px);
+    font-weight: 600;
+    color: $dark-brown;
+    margin: 0;
+    letter-spacing: 0.5px;
+    font-style: italic;
+  }
+
+  &__slogan {
+    font-size: clamp(10px, 1.4vw, 12px);
+    color: $copper;
+    margin: 2px 0 0;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+
+  &__menu-btn {
+    width: clamp(42px, 5vw, 52px);
+    height: clamp(42px, 5vw, 52px);
+    border-radius: 50%;
+    background-color: $pastel-pink;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+    flex-shrink: 0;
+    margin-left: 12px;
+
+    &:hover {
+      background-color: $pastel-pink-dark;
+    }
+  }
+
+  &__menu-icon {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 18px;
+
+    span {
+      display: block;
+      height: 2px;
+      background-color: $dark-brown;
+      border-radius: 2px;
+      transition: all 0.3s ease;
+
+      &:nth-child(1) {
+        width: 100%;
+      }
+
+      &:nth-child(2) {
+        width: 70%;
+        margin-left: auto;
+      }
+
+      &:nth-child(3) {
+        width: 100%;
+      }
+    }
+  }
+}
+
+// Dropdown Overlay
+.dropdown-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.3);
+  z-index: 150;
+  animation: fadeIn 0.2s ease;
+}
+
+.dropdown-menu {
+  position: fixed;
+  top: clamp(64px, 10vw, 88px);
+  right: clamp(16px, 4vw, 32px);
+  background-color: $white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px $shadow;
+  padding: 8px;
+  z-index: 200;
+  min-width: min(220px, calc(100vw - 48px));
+  animation: slideDown 0.3s ease;
+
+  &__item {
+    width: 100%;
+    border: none;
+    background: none;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: clamp(12px, 2vw, 14px) clamp(14px, 2.5vw, 16px);
+    border-radius: 12px;
+    text-decoration: none;
+    color: $dark-brown;
+    font-size: clamp(14px, 2vw, 16px);
+    font-weight: 500;
+    font-family: $font-th;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+
+    &:hover {
+      background-color: $light-beige;
+    }
+
+    &--active {
+      background-color: $pastel-pink;
+    }
+  }
+
+  &__icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+  }
+}
+
+// Hero Section
+.hero {
+  position: relative;
+  height: clamp(320px, 55vw, 460px);
+  overflow: hidden;
+
+  &__image {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, $beige 0%, $cream 50%, $pastel-pink 100%);
+    background-size: cover;
+    background-position: center;
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url('https://images.unsplash.com/photo-1560066984-138dadb4c035?w=1400&q=80') center/cover;
+      opacity: 0.8;
+    }
+  }
+
+  &__overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.3) 0%,
+      rgba(255, 248, 240, 0.6) 50%,
+      rgba(255, 248, 240, 0.95) 100%
+    );
+  }
+
+  &__content {
+    position: absolute;
+    bottom: clamp(24px, 6vw, 48px);
+    left: clamp(20px, 5vw, 48px);
+    right: clamp(20px, 5vw, 48px);
+    z-index: 10;
+    max-width: 760px;
+
+    // On large screens, center content in the middle
+    @media (min-width: 768px) {
+      left: 50%;
+      transform: translateX(-50%);
+      text-align: center;
+      width: 100%;
+    }
+  }
+
+  &__title {
+    font-size: clamp(26px, 5vw, 40px);
+    font-weight: 700;
+    color: $dark-brown;
+    margin: 0 0 clamp(10px, 2vw, 16px);
+    line-height: 1.3;
+  }
+
+  &__subtitle {
+    font-size: clamp(16px, 2.6vw, 20px);
+    color: $dark-brown;
+    margin: 0 0 8px;
+    font-weight: 500;
+  }
+
+  &__description {
+    font-size: clamp(13px, 2vw, 15px);
+    color: $gray;
+    margin: 0;
+    line-height: 1.5;
+  }
+}
+
+// Services Section
+.services {
+  padding: clamp(24px, 4vw, 40px) clamp(16px, 4vw, 48px);
+  background-color: $white;
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: clamp(16px, 3vw, 28px);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__title {
+    font-size: clamp(17px, 2.8vw, 24px);
+    font-weight: 600;
+    color: $dark-brown;
+    margin: 0;
+  }
+
+  &__view-all {
+    font-size: clamp(13px, 2vw, 15px);
+    color: $copper;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 14px;
+    border: 1px solid rgba(184, 115, 51, 0.3);
+    border-radius: 20px;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    background-color: transparent;
+    cursor: pointer;
+    font-family: $font-th;
+
+    &:hover:not(:disabled) {
+      background-color: rgba(184, 115, 51, 0.08);
+      opacity: 1;
+    }
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+  }
+
+  &__save-error {
+    color: #C0392B;
+    font-size: 13px;
+    margin: 10px 0 0;
+    text-align: center;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(12px, 2vw, 20px);
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  &__status {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 32px 0;
+    color: $gray;
+    font-size: clamp(14px, 2vw, 16px);
+
+    &--error {
+      color: #C0392B;
+    }
+  }
+}
+
+// Service Card
+.service-card {
+  background-color: $white;
+  border-radius: 16px;
+  padding: clamp(14px, 2.5vw, 20px);
+  box-shadow: 0 4px 16px $shadow;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px $shadow;
+  }
+
+  &__price {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 12px;
+    font-size: clamp(16px, 2.4vw, 20px);
+    font-weight: 700;
+    color: $golden-brown;
+    white-space: nowrap;
+  }
+
+  &__content {
+    display: flex;
+    gap: clamp(12px, 2.5vw, 18px);
+  }
+
+  &__image {
+    width: clamp(70px, 9vw, 96px);
+    height: clamp(70px, 9vw, 96px);
+    border-radius: 12px;
+    background-color: $light-beige;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+
+    @media (min-width: 992px) {
+      width: 110px;
+      height: 110px;
+    }
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    inset: 0;
+  }
+
+  &__icon {
+    font-size: clamp(28px, 4vw, 40px);
+  }
+
+  &__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__name {
+    font-size: clamp(15px, 2.4vw, 18px);
+    font-weight: 600;
+    color: $dark-brown;
+    margin: 0 0 6px;
+  }
+
+  &__name-en {
+    font-weight: 400;
+    font-size: clamp(13px, 2vw, 15px);
+    color: $gray;
+  }
+
+  &__description {
+    font-size: clamp(12px, 2vw, 14px);
+    color: $gray;
+    margin: 0 0 10px;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  &__duration {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: clamp(12px, 2vw, 14px);
+    color: $dark-brown;
+    font-weight: 500;
+  }
+
+  &__clock-icon {
+    width: clamp(14px, 2vw, 16px);
+    height: clamp(14px, 2vw, 16px);
+    color: $dark-brown;
+  }
+}
+
+// Footer
+.footer {
+  padding: clamp(20px, 3vw, 32px);
+  display: flex;
+  justify-content: center;
+  background-color: $white;
+
+  &__home-indicator {
+    width: clamp(100px, 14vw, 134px);
+    height: 5px;
+    background-color: $light-gray;
+    border-radius: 3px;
+  }
+}
+
+// Animations
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive breakpoints (mobile-first)
+// Small phones (<= 360px)
+@media (max-width: 360px) {
+  .header {
+    &__logo {
+      font-size: 18px;
+    }
+
+    &__slogan {
+      font-size: 9px;
+      letter-spacing: 1.5px;
+    }
+  }
+
+  .service-card {
+    &__content {
+      flex-direction: column;
+    }
+
+    &__image {
+      width: 100%;
+      height: 130px;
+    }
+  }
+}
+
+// Tablet (>= 640px): 2-column service grid
+@media (min-width: 640px) {
+  .services__list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+// Desktop (>= 1024px): 3-column service grid
+@media (min-width: 1024px) {
+  .services__list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// Large desktop (>= 1280px): 4-column service grid
+@media (min-width: 1280px) {
+  .services__list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+// xLarge desktop (>= 1600px): cap max width, 4 columns fixed
+@media (min-width: 1600px) {
+  .services {
+    &__header,
+    &__list {
+      max-width: 1440px;
+    }
+  }
+}
+
+// Reduce motion preference
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+// Hidden A4 Menu Poster (captured with html2canvas)
+.menu-poster {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 794px;
+  background-color: #FFFEFD;
+  padding: 48px 56px 40px;
+  font-family: $font-th;
+  color: $dark-brown;
+
+  &__header {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 3px double $copper;
+    margin-bottom: 24px;
+  }
+
+  &__title {
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    margin: 0 0 6px;
+    color: $dark-brown;
+  }
+
+  &__shop {
+    font-size: 16px;
+    color: $copper;
+    letter-spacing: 0.08em;
+    margin: 0;
+    font-weight: 500;
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+
+  &__row {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+
+  &__name {
+    font-size: 20px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  &__dots {
+    flex: 1;
+    border-bottom: 2px dotted rgba(186, 151, 102, 0.55);
+    transform: translateY(-4px);
+  }
+
+  &__price {
+    font-size: 20px;
+    font-weight: 700;
+    color: $copper;
+    white-space: nowrap;
+  }
+
+  &__footer {
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 2px solid $light-gray;
+    font-size: 15px;
+    color: $gray;
+    text-align: center;
+  }
+}

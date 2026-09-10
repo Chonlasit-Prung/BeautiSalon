@@ -13,8 +13,15 @@ namespace Salon.Api.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterDatabase()
-                .Annotation("Npgsql:Enum:booking_status", "cancelled,completed,confirmed,pending");
+            migrationBuilder.Sql("""
+                DO $$
+                BEGIN
+                    IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'booking_status') THEN
+                        CREATE TYPE booking_status AS ENUM ('cancelled', 'completed', 'confirmed', 'pending');
+                    END IF;
+                END
+                $$;
+                """);
 
             migrationBuilder.CreateTable(
                 name: "customers",
@@ -96,8 +103,7 @@ namespace Salon.Api.Migrations
             migrationBuilder.DropTable(
                 name: "customers");
 
-            migrationBuilder.AlterDatabase()
-                .OldAnnotation("Npgsql:Enum:booking_status", "cancelled,completed,confirmed,pending");
+            migrationBuilder.Sql("DROP TYPE IF EXISTS booking_status;");
         }
     }
 }

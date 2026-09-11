@@ -244,7 +244,7 @@ $font-th: 'Prompt', 'Sarabun', sans-serif;
 // Filters
 .filters {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
   padding: clamp(16px, 3vw, 24px) clamp(16px, 4vw, 24px) 0;
 
@@ -252,6 +252,7 @@ $font-th: 'Prompt', 'Sarabun', sans-serif;
   &__date,
   &__status {
     width: 100%;
+    min-width: 0;
     padding: 12px 14px;
     border: 1.5px solid $light-gray;
     border-radius: 14px;
@@ -326,7 +327,7 @@ $font-th: 'Prompt', 'Sarabun', sans-serif;
   font-size: 13px;
   font-weight: 500;
   color: $dark-brown;
-  margin-bottom: 14px;
+  margin: 0 clamp(16px, 4vw, 24px) 14px;
 
   &__dot {
     width: 10px;
@@ -589,7 +590,7 @@ $font-th: 'Prompt', 'Sarabun', sans-serif;
   }
 
   .filters {
-    grid-template-columns: 1.6fr 1fr 1fr;
+    grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 1fr);
     align-items: center;
 
     &__actions {

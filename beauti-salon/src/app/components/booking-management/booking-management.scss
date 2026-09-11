@@ -241,18 +241,25 @@ $font-th: 'Prompt', 'Sarabun', sans-serif;
   }
 }
 
-// Filters
 .filters {
   display: grid;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 1fr; // Mobile ให้อยู่แถวละ 1 ตัว
   gap: 10px;
   padding: clamp(16px, 3vw, 24px) clamp(16px, 4vw, 24px) 0;
+  width: 100%;
+  box-sizing: border-box;
+
+  // Responsive ปรับจำนวนคอลัมน์ตามขนาดหน้าจอ (Tablet / Desktop)
+  @media (min-width: 640px) {
+    grid-template-columns: 2fr 1fr 1fr; // ค้นหา (กว้างพิเศษ) | วันที่ | สถานะ
+  }
 
   &__search,
   &__date,
   &__status {
     width: 100%;
-    min-width: 0;
+    max-width: 100%; // ป้องกัน iOS native input ขยายล้นขอบ
+    min-width: 0;    // ป้องกัน Grid child ดันขอบออกไป
     padding: 12px 14px;
     border: 1.5px solid $light-gray;
     border-radius: 14px;
@@ -262,6 +269,8 @@ $font-th: 'Prompt', 'Sarabun', sans-serif;
     outline: none;
     font-family: $font-th;
     box-sizing: border-box;
+    appearance: none; // ช่วยลบ style แปลกๆ จาก iOS
+    -webkit-appearance: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
     &:focus {
@@ -273,6 +282,7 @@ $font-th: 'Prompt', 'Sarabun', sans-serif;
   &__actions {
     display: flex;
     gap: 10px;
+    grid-column: 1 / -1; // ให้ปุ่มค้นหา/ล้าง ลากยาวเต็มแถวล่างสุดเสมอ
   }
 
   &__btn {
